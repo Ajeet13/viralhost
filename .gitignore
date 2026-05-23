@@ -11,3 +11,6 @@ local.properties
 app/build/
 build/
 .kotlin/
+
+# Firebase configuration is per-developer / per-deployment
+app/google-services.json

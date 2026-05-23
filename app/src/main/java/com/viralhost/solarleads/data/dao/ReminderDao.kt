@@ -16,8 +16,17 @@ interface ReminderDao {
     @Query("SELECT * FROM reminders WHERE done = 0 ORDER BY triggerAt ASC")
     fun observeUpcoming(): Flow<List<Reminder>>
 
+    @Query("SELECT * FROM reminders WHERE triggerAt BETWEEN :start AND :end ORDER BY triggerAt ASC")
+    fun observeInRange(start: Long, end: Long): Flow<List<Reminder>>
+
+    @Query("SELECT * FROM reminders WHERE done = 0 AND triggerAt < :now ORDER BY triggerAt ASC")
+    fun observeOverdue(now: Long): Flow<List<Reminder>>
+
     @Query("SELECT * FROM reminders WHERE id = :id")
     suspend fun getById(id: Long): Reminder?
+
+    @Query("SELECT * FROM reminders WHERE syncId = :syncId LIMIT 1")
+    suspend fun getBySyncId(syncId: String): Reminder?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(reminder: Reminder): Long

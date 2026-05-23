@@ -34,6 +34,9 @@ interface LeadDao {
     )
     fun search(query: String, status: LeadStatus?, roof: RoofType?): Flow<List<Lead>>
 
+    @Query("SELECT * FROM leads WHERE syncId = :syncId LIMIT 1")
+    suspend fun getBySyncId(syncId: String): Lead?
+
     @Query("SELECT * FROM leads ORDER BY updatedAt DESC")
     suspend fun getAll(): List<Lead>
 

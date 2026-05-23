@@ -23,5 +23,6 @@ data class Reminder(
     val triggerAt: Long,
     val message: String? = null,
     val done: Boolean = false,
-    val createdAt: Long = System.currentTimeMillis()
+    val createdAt: Long = System.currentTimeMillis(),
+    val syncId: String = java.util.UUID.randomUUID().toString()
 )

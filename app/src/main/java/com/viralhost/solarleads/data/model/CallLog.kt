@@ -22,5 +22,6 @@ data class CallLog(
     val leadId: Long,
     val calledAt: Long = System.currentTimeMillis(),
     val outcome: String? = null,
-    val notes: String? = null
+    val notes: String? = null,
+    val syncId: String = java.util.UUID.randomUUID().toString()
 )

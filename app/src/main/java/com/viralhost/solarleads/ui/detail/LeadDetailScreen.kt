@@ -25,6 +25,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Alarm
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Call
+import androidx.compose.material.icons.filled.Chat
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.MoreVert
@@ -71,7 +72,10 @@ import com.viralhost.solarleads.data.model.CallLog
 import com.viralhost.solarleads.data.model.Lead
 import com.viralhost.solarleads.data.model.LeadStatus
 import com.viralhost.solarleads.data.model.Reminder
+import com.viralhost.solarleads.ui.components.MessageChannel
+import com.viralhost.solarleads.ui.components.TemplatePickerDialog
 import com.viralhost.solarleads.util.CallUtils
+import com.viralhost.solarleads.util.MessageUtils
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -105,6 +109,8 @@ fun LeadDetailScreen(
     var showDeleteConfirm by remember { mutableStateOf(false) }
     var menuOpen by remember { mutableStateOf(false) }
     var tab by remember { mutableStateOf(0) }
+    var showMessagePicker by remember { mutableStateOf(false) }
+    val templates by vm.templates.collectAsStateWithLifecycle()
 
     val callPermission = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -130,6 +136,9 @@ fun LeadDetailScreen(
                 actions = {
                     IconButton(onClick = { lead?.let { onEdit(it.id) } }) {
                         Icon(Icons.Filled.Edit, "Edit")
+                    }
+                    IconButton(onClick = { showMessagePicker = true }) {
+                        Icon(Icons.Filled.Chat, "Send message")
                     }
                     IconButton(onClick = { menuOpen = true }) {
                         Icon(Icons.Filled.MoreVert, "More")
@@ -251,6 +260,22 @@ fun LeadDetailScreen(
             dismissButton = {
                 TextButton(onClick = { showDeleteConfirm = false }) { Text("Cancel") }
             }
+        )
+    }
+
+    if (showMessagePicker && lead != null) {
+        TemplatePickerDialog(
+            title = "Send to ${lead.name}",
+            templates = templates,
+            onDismiss = { showMessagePicker = false },
+            onSend = { channel, body ->
+                showMessagePicker = false
+                when (channel) {
+                    MessageChannel.WHATSAPP -> MessageUtils.sendWhatsApp(context, lead.phone, body)
+                    MessageChannel.SMS -> MessageUtils.sendSms(context, lead.phone, body)
+                }
+            },
+            previewMessage = { it.render(lead) }
         )
     }
 }
