@@ -13,6 +13,9 @@ interface CallLogDao {
     @Query("SELECT * FROM call_logs WHERE leadId = :leadId ORDER BY calledAt DESC")
     fun observeForLead(leadId: Long): Flow<List<CallLog>>
 
+    @Query("SELECT * FROM call_logs WHERE calledAt >= :start ORDER BY calledAt DESC")
+    suspend fun getSince(start: Long): List<CallLog>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(callLog: CallLog): Long
 

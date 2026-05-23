@@ -18,9 +18,17 @@ import bulk leads from Excel/CSV, and export everything back to CSV.
   Converted. The lead's status is updated accordingly.
 - **Callback reminders** — schedule date/time per lead; a notification fires
   via WorkManager when it's due (tap it to jump straight to the lead).
+- **Today's Callbacks screen** — bottom-tab view that lists overdue and
+  due-today reminders across all leads, with quick call/done/delete actions.
+- **WhatsApp / SMS templates** — manage reusable message templates with
+  placeholders like `{name}`, `{address}`, `{size}`. Send single messages
+  from a lead row, or **bulk send** to many leads at once via multi-select.
+- **Analytics dashboard** — pipeline funnel by status, roof-type breakdown,
+  conversion rate, and a 7-day calls-per-day bar chart.
 - **Excel / CSV import** — pick a `.xlsx`, `.xls`, or `.csv` from your phone
   and bulk-create leads. Header row drives column mapping.
 - **CSV export** — export all leads, then share via email / Drive / etc.
+- **Solar-themed app icon** — adaptive icon with a sun + house + roof panel design.
 
 ## Lead Statuses
 

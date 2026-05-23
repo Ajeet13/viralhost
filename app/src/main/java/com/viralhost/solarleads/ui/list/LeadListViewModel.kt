@@ -9,6 +9,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.viralhost.solarleads.SolarLeadsApp
 import com.viralhost.solarleads.data.model.Lead
 import com.viralhost.solarleads.data.model.LeadStatus
+import com.viralhost.solarleads.data.model.MessageTemplate
 import com.viralhost.solarleads.data.model.RoofType
 import com.viralhost.solarleads.data.repository.LeadRepository
 import com.viralhost.solarleads.util.CsvExporter
@@ -27,7 +28,10 @@ data class LeadListUiState(
     val query: String = "",
     val statusFilter: LeadStatus? = null,
     val roofFilter: RoofType? = null,
-    val leads: List<Lead> = emptyList()
+    val leads: List<Lead> = emptyList(),
+    val selectionMode: Boolean = false,
+    val selectedIds: Set<Long> = emptySet(),
+    val templates: List<MessageTemplate> = emptyList()
 )
 
 class LeadListViewModel(
@@ -38,14 +42,33 @@ class LeadListViewModel(
     private val query = MutableStateFlow("")
     private val statusFilter = MutableStateFlow<LeadStatus?>(null)
     private val roofFilter = MutableStateFlow<RoofType?>(null)
+    private val selectionMode = MutableStateFlow(false)
+    private val selectedIds = MutableStateFlow<Set<Long>>(emptySet())
 
     private val filters = combine(query, statusFilter, roofFilter) { q, s, r -> Triple(q, s, r) }
 
     @OptIn(ExperimentalCoroutinesApi::class)
     private val leads = filters.flatMapLatest { (q, s, r) -> repo.search(q, s, r) }
 
-    val uiState: StateFlow<LeadListUiState> = combine(query, statusFilter, roofFilter, leads) { q, s, r, list ->
-        LeadListUiState(q, s, r, list)
+    private data class Selection(val mode: Boolean, val ids: Set<Long>)
+
+    private val selection = combine(selectionMode, selectedIds) { mode, ids -> Selection(mode, ids) }
+
+    val uiState: StateFlow<LeadListUiState> = combine(
+        filters,
+        leads,
+        selection,
+        repo.observeTemplates()
+    ) { (q, s, r), list, sel, tpl ->
+        LeadListUiState(
+            query = q,
+            statusFilter = s,
+            roofFilter = r,
+            leads = list,
+            selectionMode = sel.mode,
+            selectedIds = sel.ids,
+            templates = tpl
+        )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), LeadListUiState())
 
     private val _exportedFile = MutableStateFlow<File?>(null)
@@ -54,6 +77,30 @@ class LeadListViewModel(
     fun setQuery(value: String) { query.value = value }
     fun setStatusFilter(value: LeadStatus?) { statusFilter.value = value }
     fun setRoofFilter(value: RoofType?) { roofFilter.value = value }
+
+    fun startSelection(initial: Long) {
+        selectionMode.value = true
+        selectedIds.value = setOf(initial)
+    }
+
+    fun toggleSelection(id: Long) {
+        val current = selectedIds.value
+        selectedIds.value = if (id in current) current - id else current + id
+        if (selectedIds.value.isEmpty()) selectionMode.value = false
+    }
+
+    fun clearSelection() {
+        selectionMode.value = false
+        selectedIds.value = emptySet()
+    }
+
+    fun selectAllVisible() {
+        val current = uiState.value.leads.map { it.id }.toSet()
+        selectedIds.value = current
+        selectionMode.value = current.isNotEmpty()
+    }
+
+    suspend fun selectedLeads(): List<Lead> = repo.getLeadsByIds(selectedIds.value.toList())
 
     fun delete(lead: Lead) = viewModelScope.launch { repo.delete(lead) }
 

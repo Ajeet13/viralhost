@@ -40,6 +40,10 @@ class LeadDetailViewModel(
         ) { lead, calls, reminders -> LeadDetailUiState(lead, calls, reminders) }
             .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), LeadDetailUiState())
 
+    val templates: StateFlow<List<com.viralhost.solarleads.data.model.MessageTemplate>> =
+        repo.observeTemplates()
+            .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
+
     fun updateStatus(status: LeadStatus) = viewModelScope.launch {
         repo.updateStatus(leadId, status)
     }

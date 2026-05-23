@@ -6,17 +6,32 @@ import android.app.NotificationManager
 import android.os.Build
 import com.viralhost.solarleads.data.AppDatabase
 import com.viralhost.solarleads.data.repository.LeadRepository
+import kotlinx.coroutines.launch
 
 class SolarLeadsApp : Application() {
 
     val database: AppDatabase by lazy { AppDatabase.get(this) }
     val repository: LeadRepository by lazy {
-        LeadRepository(database.leadDao(), database.callLogDao(), database.reminderDao())
+        LeadRepository(
+            database.leadDao(),
+            database.callLogDao(),
+            database.reminderDao(),
+            database.messageTemplateDao()
+        )
     }
 
     override fun onCreate() {
         super.onCreate()
         createNotificationChannel()
+        seedDefaultsAsync()
+    }
+
+    private fun seedDefaultsAsync() {
+        kotlinx.coroutines.GlobalScope.launch(kotlinx.coroutines.Dispatchers.IO) {
+            try {
+                repository.seedDefaultTemplates()
+            } catch (_: Throwable) { /* ignore */ }
+        }
     }
 
     private fun createNotificationChannel() {
