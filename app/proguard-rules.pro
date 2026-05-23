@@ -1,0 +1,12 @@
+# Apache POI rules
+-keep class org.apache.poi.** { *; }
+-keep class org.openxmlformats.** { *; }
+-keep class schemaorg_apache_xmlbeans.** { *; }
+-keep class org.apache.xmlbeans.** { *; }
+-dontwarn org.apache.poi.**
+-dontwarn org.openxmlformats.**
+-dontwarn org.apache.xmlbeans.**
+-dontwarn org.apache.commons.**
+-dontwarn javax.xml.**
+-dontwarn org.etsi.**
+-dontwarn org.w3.**
