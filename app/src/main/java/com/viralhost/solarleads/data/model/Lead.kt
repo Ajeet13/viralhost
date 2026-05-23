@@ -15,5 +15,7 @@ data class Lead(
     val status: LeadStatus = LeadStatus.NEW,
     val notes: String? = null,
     val createdAt: Long = System.currentTimeMillis(),
-    val updatedAt: Long = System.currentTimeMillis()
+    val updatedAt: Long = System.currentTimeMillis(),
+    /** Stable cross-device identity used for cloud sync. Generated on insert. */
+    val syncId: String = java.util.UUID.randomUUID().toString()
 )

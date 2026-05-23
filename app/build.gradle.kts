@@ -1,7 +1,20 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.devtools.ksp")
+    // The Firebase Google Services plugin is conditionally applied below
+    // only when google-services.json is present, so the project still
+    // builds out of the box.
+}
+
+// Apply the Google Services plugin only if google-services.json is present.
+// This lets the project compile fine without Firebase being set up yet.
+val googleServicesJson = file("google-services.json")
+val firebaseEnabled: Boolean = googleServicesJson.exists()
+if (firebaseEnabled) {
+    apply(plugin = "com.google.gms.google-services")
 }
 
 android {
@@ -19,6 +32,8 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        buildConfigField("boolean", "FIREBASE_ENABLED", firebaseEnabled.toString())
     }
 
     buildTypes {
@@ -39,6 +54,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.14"
@@ -89,6 +105,7 @@ dependencies {
 
     // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.8.1")
 
     // WorkManager (for callback reminders)
     implementation("androidx.work:work-runtime-ktx:2.9.1")
@@ -103,4 +120,11 @@ dependencies {
 
     // DocumentFile for SAF
     implementation("androidx.documentfile:documentfile:1.0.1")
+
+    // Firebase (Firestore + Auth) – pulled in always so code compiles, but
+    // the Google Services plugin is only applied when google-services.json
+    // is present.
+    implementation(platform("com.google.firebase:firebase-bom:33.1.2"))
+    implementation("com.google.firebase:firebase-firestore-ktx")
+    implementation("com.google.firebase:firebase-auth-ktx")
 }

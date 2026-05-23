@@ -31,12 +31,15 @@ data class LeadListUiState(
     val leads: List<Lead> = emptyList(),
     val selectionMode: Boolean = false,
     val selectedIds: Set<Long> = emptySet(),
-    val templates: List<MessageTemplate> = emptyList()
+    val templates: List<MessageTemplate> = emptyList(),
+    val cloudState: com.viralhost.solarleads.cloud.CloudSync.State =
+        com.viralhost.solarleads.cloud.CloudSync.State.DISABLED
 )
 
 class LeadListViewModel(
     app: Application,
-    private val repo: LeadRepository
+    private val repo: LeadRepository,
+    private val cloudSync: com.viralhost.solarleads.cloud.CloudSync
 ) : AndroidViewModel(app) {
 
     private val query = MutableStateFlow("")
@@ -58,8 +61,9 @@ class LeadListViewModel(
         filters,
         leads,
         selection,
-        repo.observeTemplates()
-    ) { (q, s, r), list, sel, tpl ->
+        repo.observeTemplates(),
+        cloudSync.state
+    ) { (q, s, r), list, sel, tpl, cloud ->
         LeadListUiState(
             query = q,
             statusFilter = s,
@@ -67,7 +71,8 @@ class LeadListViewModel(
             leads = list,
             selectionMode = sel.mode,
             selectedIds = sel.ids,
-            templates = tpl
+            templates = tpl,
+            cloudState = cloud
         )
     }.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), LeadListUiState())
 
@@ -115,8 +120,8 @@ class LeadListViewModel(
     companion object {
         fun factory(app: Application): ViewModelProvider.Factory = viewModelFactory {
             initializer {
-                val repo = (app as SolarLeadsApp).repository
-                LeadListViewModel(app, repo)
+                val solarApp = app as SolarLeadsApp
+                LeadListViewModel(app, solarApp.repository, solarApp.cloudSync)
             }
         }
     }

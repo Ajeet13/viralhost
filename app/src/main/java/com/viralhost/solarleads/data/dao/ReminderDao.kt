@@ -25,6 +25,9 @@ interface ReminderDao {
     @Query("SELECT * FROM reminders WHERE id = :id")
     suspend fun getById(id: Long): Reminder?
 
+    @Query("SELECT * FROM reminders WHERE syncId = :syncId LIMIT 1")
+    suspend fun getBySyncId(syncId: String): Reminder?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(reminder: Reminder): Long
 

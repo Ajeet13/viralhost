@@ -21,6 +21,9 @@ interface MessageTemplateDao {
     @Query("SELECT COUNT(*) FROM message_templates")
     suspend fun count(): Int
 
+    @Query("SELECT * FROM message_templates WHERE syncId = :syncId LIMIT 1")
+    suspend fun getBySyncId(syncId: String): MessageTemplate?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(template: MessageTemplate): Long
 

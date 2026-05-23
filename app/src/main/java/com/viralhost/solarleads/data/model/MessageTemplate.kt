@@ -13,7 +13,8 @@ data class MessageTemplate(
     val title: String,
     val body: String,
     val isDefault: Boolean = false,
-    val createdAt: Long = System.currentTimeMillis()
+    val createdAt: Long = System.currentTimeMillis(),
+    val syncId: String = java.util.UUID.randomUUID().toString()
 ) {
     fun render(lead: Lead): String {
         return body

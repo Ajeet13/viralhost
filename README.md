@@ -103,13 +103,67 @@ The APK lands in `app/build/outputs/apk/debug/`.
 ## Permissions
 
 Granted on install (no runtime prompt needed):
-- `INTERNET` — none required; app is fully offline today.
+- `INTERNET`, `ACCESS_NETWORK_STATE` — only used when Firebase cloud sync is enabled.
 
 Asked for at runtime:
 - `CALL_PHONE` — when you tap the **Call** button. If denied, the system
   dialer opens with the number pre-filled.
 - `POST_NOTIFICATIONS` (Android 13+) — needed for callback reminders.
 - `SCHEDULE_EXACT_ALARM` / `USE_EXACT_ALARM` — for accurate callback firing.
+
+## Cloud sync (optional, Firebase Firestore)
+
+The app works fully offline. If you want leads to sync across devices, set up
+Firebase Firestore — it's free for the volume a small sales team will use.
+
+The app is **opt-in by default**: if `app/google-services.json` is missing, the
+Google Services plugin is skipped, no network calls are made, and the top bar
+shows a "Local" badge instead of "Cloud".
+
+### One-time Firebase setup
+
+1. Sign in to <https://console.firebase.google.com> and create a new project.
+2. Add an Android app with package id **`com.viralhost.solarleads`**.
+3. Download the generated `google-services.json` and drop it into
+   **`app/google-services.json`** (next to `app/build.gradle.kts`).
+4. In the Firebase console, open **Build → Authentication → Sign-in method**
+   and enable **Anonymous**.
+5. In **Build → Firestore Database** click **Create database**, choose any
+   location, and start in test mode (we'll lock it down in step 6).
+6. Replace the rules with:
+
+   ```
+   rules_version = '2';
+   service cloud.firestore {
+     match /databases/{database}/documents {
+       match /users/{uid}/{collection}/{document} {
+         allow read, write: if request.auth != null && request.auth.uid == uid;
+       }
+     }
+   }
+   ```
+
+7. Re-build the app. On launch it signs in anonymously, mirrors local data to
+   `users/{uid}/leads`, `…/call_logs`, and `…/message_templates`, and listens
+   for cloud changes in real time.
+
+### What gets synced
+
+| Local table | Firestore path |
+|---|---|
+| `leads` | `users/{uid}/leads/{syncId}` |
+| `call_logs` | `users/{uid}/call_logs/{syncId}` |
+| `message_templates` | `users/{uid}/message_templates/{syncId}` |
+
+Reminders stay device-local for now (notifications are fired by the local
+WorkManager and don't make sense to mirror across devices).
+
+### Sharing across multiple devices
+
+Anonymous auth gives each device a different UID, so by default each phone
+keeps its own private data set. To share data across devices for the same
+user, swap **Anonymous** for **Email/Password** (or Google Sign-In) — the
+Firestore paths will keep working unchanged.
 
 ## Excel / CSV import format
 

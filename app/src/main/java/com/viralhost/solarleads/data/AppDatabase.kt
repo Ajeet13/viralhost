@@ -16,7 +16,7 @@ import com.viralhost.solarleads.data.model.Reminder
 
 @Database(
     entities = [Lead::class, CallLog::class, Reminder::class, MessageTemplate::class],
-    version = 2,
+    version = 3,
     exportSchema = false
 )
 @TypeConverters(Converters::class)

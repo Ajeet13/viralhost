@@ -115,7 +115,13 @@ fun LeadListScreen(
                 )
             } else {
                 TopAppBar(
-                    title = { Text("Solar Leads") },
+                    title = {
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text("Solar Leads")
+                            Spacer(Modifier.width(8.dp))
+                            CloudStateBadge(state.cloudState)
+                        }
+                    },
                     actions = {
                         IconButton(onClick = { filtersOpen = !filtersOpen }) {
                             Icon(Icons.Filled.FilterList, contentDescription = "Filter")
@@ -395,8 +401,27 @@ private fun LeadRow(
 }
 
 @Composable
-private fun StatusBadge(status: LeadStatus) {
-    val (bg, fg) = when (status) {
+private fun CloudStateBadge(state: com.viralhost.solarleads.cloud.CloudSync.State) {
+    val (label, color) = when (state) {
+        com.viralhost.solarleads.cloud.CloudSync.State.DISABLED -> "Local" to MaterialTheme.colorScheme.surfaceVariant
+        com.viralhost.solarleads.cloud.CloudSync.State.INITIALISING -> "Syncing…" to MaterialTheme.colorScheme.tertiaryContainer
+        com.viralhost.solarleads.cloud.CloudSync.State.SIGNED_IN -> "Cloud" to MaterialTheme.colorScheme.primaryContainer
+        com.viralhost.solarleads.cloud.CloudSync.State.ERROR -> "Sync error" to MaterialTheme.colorScheme.errorContainer
+    }
+    Surface(
+        color = color,
+        shape = MaterialTheme.shapes.small
+    ) {
+        Text(
+            label,
+            style = MaterialTheme.typography.labelSmall,
+            modifier = Modifier.padding(horizontal = 6.dp, vertical = 2.dp)
+        )
+    }
+}
+
+@Composable
+private fun StatusBadge(status: LeadStatus) {    val (bg, fg) = when (status) {
         LeadStatus.NEW -> MaterialTheme.colorScheme.secondaryContainer to MaterialTheme.colorScheme.onSecondaryContainer
         LeadStatus.INTERESTED -> MaterialTheme.colorScheme.primaryContainer to MaterialTheme.colorScheme.onPrimaryContainer
         LeadStatus.NOT_INTERESTED, LeadStatus.LOST -> MaterialTheme.colorScheme.errorContainer to MaterialTheme.colorScheme.onErrorContainer
