@@ -1,135 +1,112 @@
-# Solar Leads – Android App
+# 🌞 Solar Installer Website Template
 
-An Android app for tracking solar leads. You can call customers directly, log
-each call with an outcome, schedule callback reminders, search/filter leads,
-import bulk leads from Excel/CSV, and export everything back to CSV.
+A production-ready, SEO-optimized, Hindi-first solar installation business website.
+**आप इसे ₹25,000 - ₹50,000 में clients को बेच सकते हैं।**
 
 ## Features
 
-- **Lead management** — add, edit, delete leads with the fields you need:
-  `Name`, `Phone Number`, `IVRS`, `Address/City`, `Roof Type` (RCC / Tin /
-  Other), `System Size (kW)`, plus status and notes.
-- **Search & filter** — fuzzy search across name / phone / IVRS / address, plus
-  filter chips for status and roof type.
-- **One-tap calling** — direct dial (with `CALL_PHONE` permission) or fall back
-  to the system dialer; every call is auto-logged in the lead's call history.
-- **Call outcomes** — after each call pick from: Connected, Not Interested,
-  No Answer, Wrong Number, Callback Later, Site Visit Booked, Quoted,
-  Converted. The lead's status is updated accordingly.
-- **Callback reminders** — schedule date/time per lead; a notification fires
-  via WorkManager when it's due (tap it to jump straight to the lead).
-- **Excel / CSV import** — pick a `.xlsx`, `.xls`, or `.csv` from your phone
-  and bulk-create leads. Header row drives column mapping.
-- **CSV export** — export all leads, then share via email / Drive / etc.
+- ✅ Modern Hindi UI (mobile responsive)
+- ✅ Interactive Savings Calculator
+- ✅ WhatsApp + Email lead capture
+- ✅ Full SEO (sitemap, schema, OG tags)
+- ✅ PM Surya Ghar Yojana focus
+- ✅ Single config file customization
+- ✅ Free Vercel deployment
 
-## Lead Statuses
-
-`New`, `Interested`, `Not Interested`, `Callback Scheduled`,
-`Site Visit Booked`, `Quoted`, `Converted`, `Lost`.
-
-## Tech stack
-
-| Layer | Library |
-|---|---|
-| Language | Kotlin 1.9 |
-| UI | Jetpack Compose (Material 3) |
-| Navigation | Navigation Compose |
-| State | ViewModel + StateFlow |
-| Persistence | Room (SQLite) |
-| Background work | WorkManager |
-| Excel | Apache POI 5.x |
-| CSV | OpenCSV 5.x |
-| Min SDK | 24 (Android 7.0) |
-| Target SDK | 34 |
-
-## Project layout
-
-```
-app/src/main/java/com/viralhost/solarleads/
-├── SolarLeadsApp.kt           # Application class, notification channel
-├── data/
-│   ├── AppDatabase.kt         # Room DB
-│   ├── Converters.kt
-│   ├── dao/                   # LeadDao, CallLogDao, ReminderDao
-│   ├── model/                 # Lead, CallLog, Reminder, LeadStatus, RoofType
-│   └── repository/LeadRepository.kt
-├── reminders/
-│   ├── ReminderScheduler.kt   # WorkManager scheduling
-│   └── ReminderWorker.kt      # Notification on trigger
-├── ui/
-│   ├── MainActivity.kt
-│   ├── nav/SolarLeadsNavHost.kt
-│   ├── theme/Theme.kt
-│   ├── list/                  # Lead list + filters + export
-│   ├── edit/                  # Add / edit form
-│   ├── detail/                # Detail + call + reminders + outcome
-│   └── import_/               # Excel/CSV import
-└── util/
-    ├── CallUtils.kt
-    ├── CsvExporter.kt
-    └── ExcelImporter.kt
-```
-
-## Building
-
-This project uses the Gradle Kotlin DSL with KSP for Room.
-
-### Option A — Android Studio (recommended)
-
-1. Open the `viralhost` folder in **Android Studio** (Hedgehog or newer).
-2. Studio will sync, download dependencies, and generate `gradle/wrapper/gradle-wrapper.jar`.
-3. Press **Run** to build and install the app on a device/emulator.
-
-### Option B — Command line
-
-You'll need a local Gradle installation (8.7+) the first time so the wrapper
-jar can be generated:
+## Quick Start (Local)
 
 ```bash
-gradle wrapper                # one-time, only if gradle-wrapper.jar is missing
-./gradlew assembleDebug        # build debug APK
+npm install
+npm run dev
 ```
 
-The APK lands in `app/build/outputs/apk/debug/`.
+Open `http://localhost:3000`
 
-## Permissions
+## Customize for Each Client (5 minutes)
 
-Granted on install (no runtime prompt needed):
-- `INTERNET` — none required; app is fully offline today.
+Edit ONLY this file: `lib/config.ts`
 
-Asked for at runtime:
-- `CALL_PHONE` — when you tap the **Call** button. If denied, the system
-  dialer opens with the number pre-filled.
-- `POST_NOTIFICATIONS` (Android 13+) — needed for callback reminders.
-- `SCHEDULE_EXACT_ALARM` / `USE_EXACT_ALARM` — for accurate callback firing.
+```typescript
+export const SITE_CONFIG = {
+  businessName: "Client Solar Co",
+  whatsappNumber: "919999999999", // Client's number
+  phoneNumber: "+919999999999",
+  email: "info@client.com",
+  city: "Jaipur",
+  // ...
+};
+```
 
-## Excel / CSV import format
+That's it! पूरी website automatically update हो जाएगी।
 
-The first row must be a header row. Column order doesn't matter; matching is
-case-insensitive. Recognised headers:
+## Deploy to Vercel (Free, 2 minutes)
 
-| Field | Accepted headers |
-|---|---|
-| Name (required) | `Name`, `Customer Name`, `Full Name` |
-| Phone (required) | `Phone`, `Phone Number`, `Mobile`, `Contact` |
-| IVRS | `IVRS`, `IVR` |
-| Address | `Address`, `City`, `Address/City`, `Location` |
-| Roof Type | `Roof`, `Roof Type`, `Rooftop` |
-| System Size | `Size`, `System Size`, `kW`, `System Size (kW)` |
+1. Push code to GitHub
+2. Go to vercel.com → Import repo
+3. Click Deploy → Done!
 
-A ready-to-use sample file lives at [`sample_leads_template.csv`](sample_leads_template.csv).
+Custom domain: Add via Vercel dashboard (Settings → Domains)
 
-You can also save it as `.xlsx` from Excel/Google Sheets and import that
-directly.
+## Optional: Lead Capture Setup
 
-## Roadmap ideas
+### Email (Resend - 3000 free/month)
 
-- Cloud sync (Firebase / REST backend)
-- User accounts + role-based access
-- WhatsApp / SMS quick-templates
-- Lead source tracking and analytics dashboard
-- Bulk-edit and bulk-delete
+1. Sign up at [resend.com](https://resend.com)
+2. Get API key
+3. Add to Vercel env: `RESEND_API_KEY=re_xxx`
+
+### Google Sheets (100% Free)
+
+1. Create new Google Sheet
+2. Extensions → Apps Script → paste this:
+
+```javascript
+function doPost(e) {
+  const sheet = SpreadsheetApp.getActiveSheet();
+  const data = JSON.parse(e.postData.contents);
+  sheet.appendRow([
+    new Date(), data.name, data.phone, data.city, data.bill, data.message
+  ]);
+  return ContentService.createTextOutput(JSON.stringify({success: true}));
+}
+```
+
+3. Deploy → New deployment → Web app → Anyone → Deploy
+4. Copy URL → Add to Vercel env: `GOOGLE_SHEETS_WEBHOOK_URL=https://...`
+
+## Tech Stack
+
+- Next.js 14 (App Router)
+- TypeScript
+- Tailwind CSS
+- Lucide Icons
+- Vercel (hosting)
+
+## Project Structure
+
+```
+solar-website-template/
+├── app/
+│   ├── api/lead/route.ts    # Lead capture API
+│   ├── layout.tsx           # SEO metadata
+│   ├── page.tsx             # Main page
+│   ├── sitemap.ts           # SEO sitemap
+│   └── robots.ts            # SEO robots
+├── components/
+│   ├── Navbar.tsx
+│   ├── Hero.tsx
+│   ├── Services.tsx
+│   ├── Calculator.tsx       # Savings calculator
+│   ├── Subsidy.tsx          # PM Surya Ghar info
+│   ├── Testimonials.tsx
+│   ├── ContactForm.tsx      # Lead capture form
+│   ├── Footer.tsx
+│   ├── WhatsAppFloat.tsx
+│   └── SchemaMarkup.tsx     # JSON-LD SEO
+└── lib/
+    └── config.ts            # ⭐ Edit this for each client
+```
 
 ## License
 
-Internal project — license TBD.
+Yours to sell as a service. एक template = कई clients को बेचो।
