@@ -9,6 +9,7 @@ const links = [
   { href: "#subsidy", label: "सब्सिडी" },
   { href: "#testimonials", label: "ग्राहक" },
   { href: "#contact", label: "संपर्क" },
+  { href: "/plagiarism-checker", label: "Plagiarism Checker" },
 ];
 
 export default function Navbar() {
