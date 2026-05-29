@@ -1,17 +1,15 @@
-# 🌞 Solar Installer Website Template
+# 🛡️ Plagiarism Checker Pro
 
-A production-ready, SEO-optimized, Hindi-first solar installation business website.
-**आप इसे ₹25,000 - ₹50,000 में clients को बेच सकते हैं।**
+A professional, AI-powered plagiarism checker built with Next.js. Detects duplicate content across the web, checks for AI-generated text, and automatically rewrites flagged passages.
 
 ## Features
 
-- ✅ Modern Hindi UI (mobile responsive)
-- ✅ Interactive Savings Calculator
-- ✅ WhatsApp + Email lead capture
-- ✅ Full SEO (sitemap, schema, OG tags)
-- ✅ PM Surya Ghar Yojana focus
-- ✅ Single config file customization
-- ✅ Free Vercel deployment
+- ✅ **Scan Modes** — Normal Scan, Deep Scan (PRO), Academic Scan (PRO)
+- ✅ **Exclusions** — Exclude Quotes (PRO), Exclude Bibliography (PRO)
+- ✅ **AI & Integrity** — AI Detection with probability scoring, Fingerprint (PRO)
+- ✅ **Auto-Rewriting** — Replaces plagiarized sentences with unique, meaning-preserving alternatives
+- ✅ **Results Dashboard** — Unique-content score, plagiarism %, sources found, scan time
+- ✅ **Copy & Download** — Export the rewritten, plagiarism-free text
 
 ## Quick Start (Local)
 
@@ -22,23 +20,6 @@ npm run dev
 
 Open `http://localhost:3000`
 
-## Customize for Each Client (5 minutes)
-
-Edit ONLY this file: `lib/config.ts`
-
-```typescript
-export const SITE_CONFIG = {
-  businessName: "Client Solar Co",
-  whatsappNumber: "919999999999", // Client's number
-  phoneNumber: "+919999999999",
-  email: "info@client.com",
-  city: "Jaipur",
-  // ...
-};
-```
-
-That's it! पूरी website automatically update हो जाएगी।
-
 ## Deploy to Vercel (Free, 2 minutes)
 
 1. Push code to GitHub
@@ -46,33 +27,6 @@ That's it! पूरी website automatically update हो जाएगी।
 3. Click Deploy → Done!
 
 Custom domain: Add via Vercel dashboard (Settings → Domains)
-
-## Optional: Lead Capture Setup
-
-### Email (Resend - 3000 free/month)
-
-1. Sign up at [resend.com](https://resend.com)
-2. Get API key
-3. Add to Vercel env: `RESEND_API_KEY=re_xxx`
-
-### Google Sheets (100% Free)
-
-1. Create new Google Sheet
-2. Extensions → Apps Script → paste this:
-
-```javascript
-function doPost(e) {
-  const sheet = SpreadsheetApp.getActiveSheet();
-  const data = JSON.parse(e.postData.contents);
-  sheet.appendRow([
-    new Date(), data.name, data.phone, data.city, data.bill, data.message
-  ]);
-  return ContentService.createTextOutput(JSON.stringify({success: true}));
-}
-```
-
-3. Deploy → New deployment → Web app → Anyone → Deploy
-4. Copy URL → Add to Vercel env: `GOOGLE_SHEETS_WEBHOOK_URL=https://...`
 
 ## Tech Stack
 
@@ -85,28 +39,27 @@ function doPost(e) {
 ## Project Structure
 
 ```
-solar-website-template/
+viralhost/
 ├── app/
-│   ├── api/lead/route.ts    # Lead capture API
-│   ├── layout.tsx           # SEO metadata
-│   ├── page.tsx             # Main page
-│   ├── sitemap.ts           # SEO sitemap
-│   └── robots.ts            # SEO robots
-├── components/
-│   ├── Navbar.tsx
-│   ├── Hero.tsx
-│   ├── Services.tsx
-│   ├── Calculator.tsx       # Savings calculator
-│   ├── Subsidy.tsx          # PM Surya Ghar info
-│   ├── Testimonials.tsx
-│   ├── ContactForm.tsx      # Lead capture form
-│   ├── Footer.tsx
-│   ├── WhatsAppFloat.tsx
-│   └── SchemaMarkup.tsx     # JSON-LD SEO
-└── lib/
-    └── config.ts            # ⭐ Edit this for each client
+│   ├── api/plagiarism/route.ts        # Scanning engine, paraphrasing, AI detection
+│   ├── plagiarism-checker/page.tsx    # /plagiarism-checker route
+│   ├── layout.tsx                     # SEO metadata
+│   ├── page.tsx                       # Home page (renders the checker)
+│   ├── sitemap.ts                     # SEO sitemap
+│   └── robots.ts                      # SEO robots
+└── components/
+    └── plagiarism/
+        └── PlagiarismChecker.tsx      # Full UI component
 ```
 
-## License
+## How It Works
 
-Yours to sell as a service. एक template = कई clients को बेचो।
+1. Paste text (minimum 20 words)
+2. Choose a scan mode and toggle PRO features
+3. Click **Check Plagiarism** to scan
+4. Review results across three tabs:
+   - **Plagiarism Results** — flagged lines, source URLs, and suggested replacements
+   - **AI Detection** — AI probability, human-content score, fingerprint, detected patterns
+   - **Rewritten Text** — a fully unique version of your content
+
+> Note: The scanning backend is a self-contained simulation/heuristic engine. To connect a live web index, replace the source-matching logic in `app/api/plagiarism/route.ts` with a real search/plagiarism API.

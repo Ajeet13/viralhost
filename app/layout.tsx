@@ -1,61 +1,41 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
-import SchemaMarkup from "@/components/SchemaMarkup";
 
-const SITE_URL = "https://suryashakti.com"; // Client domain से बदलें
+const SITE_URL = "https://viralhost.example.com"; // अपने domain से बदलें
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default:
-      "SuryaShakti Solar — रूफटॉप सोलर इंस्टॉलेशन | PM Surya Ghar Yojana",
-    template: "%s | SuryaShakti Solar",
+    default: "Plagiarism Checker Pro — AI Detection & Deep Scan",
+    template: "%s | Plagiarism Checker Pro",
   },
   description:
-    "घर पर सोलर पैनल लगवाएं और हर महीने ₹3000+ बिजली बचाएं। PM Surya Ghar Yojana की ₹78,000 तक सब्सिडी, 25 साल वारंटी, मुफ्त साइट विज़िट। 5000+ खुश ग्राहक।",
+    "Professional plagiarism checker with AI detection, fingerprint analysis, and automatic rewriting. Supports Normal, Deep, and Academic scan modes across the entire web.",
   keywords: [
-    "solar panel installation India",
-    "rooftop solar Jaipur",
-    "PM Surya Ghar Yojana",
-    "solar subsidy India 2026",
-    "घर पर सोलर पैनल",
-    "सोलर सब्सिडी",
-    "solar installer near me",
-    "MNRE approved solar",
-    "residential solar India",
-    "commercial solar installation",
+    "plagiarism checker",
+    "AI detection",
+    "deep scan plagiarism",
+    "academic plagiarism checker",
+    "fingerprint plagiarism",
+    "content originality checker",
+    "rewrite plagiarized text",
+    "duplicate content checker",
   ],
-  authors: [{ name: "SuryaShakti Solar" }],
-  creator: "SuryaShakti Solar",
-  publisher: "SuryaShakti Solar",
-  formatDetection: {
-    email: false,
-    address: false,
-    telephone: false,
-  },
+  authors: [{ name: "Plagiarism Checker Pro" }],
   openGraph: {
-    title: "SuryaShakti Solar — रूफटॉप सोलर इंस्टॉलेशन",
+    title: "Plagiarism Checker Pro — AI Detection & Deep Scan",
     description:
-      "₹78,000 तक सरकारी सब्सिडी • 25 साल वारंटी • मुफ्त साइट विज़िट • 5000+ खुश ग्राहक",
+      "Detect plagiarism across the entire web, check AI-generated content, and auto-rewrite flagged text.",
     url: SITE_URL,
-    siteName: "SuryaShakti Solar",
-    locale: "hi_IN",
+    siteName: "Plagiarism Checker Pro",
+    locale: "en_US",
     type: "website",
-    images: [
-      {
-        url: "/og-image.jpg",
-        width: 1200,
-        height: 630,
-        alt: "SuryaShakti Solar - Rooftop Solar Installation in India",
-      },
-    ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "SuryaShakti Solar — Rooftop Solar Installation",
+    title: "Plagiarism Checker Pro",
     description:
-      "Save ₹3000+ monthly. ₹78,000 subsidy. 25-year warranty. 5000+ happy customers.",
-    images: ["/og-image.jpg"],
+      "AI-powered plagiarism detection with Deep & Academic scan modes and automatic rewriting.",
   },
   robots: {
     index: true,
@@ -70,18 +50,11 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: SITE_URL,
-    languages: {
-      "hi-IN": SITE_URL,
-      "en-IN": `${SITE_URL}/en`,
-    },
-  },
-  verification: {
-    google: "PLACEHOLDER_GOOGLE_VERIFICATION_CODE",
   },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#f57c00",
+  themeColor: "#4f46e5",
   width: "device-width",
   initialScale: 1,
 };
@@ -92,11 +65,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="hi">
-      <head>
-        <link rel="canonical" href={SITE_URL} />
-        <SchemaMarkup />
-      </head>
+    <html lang="en">
       <body>{children}</body>
     </html>
   );
